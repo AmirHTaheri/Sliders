@@ -6,43 +6,12 @@ import "rc-slider/assets/index.css";
 import ReactDOM from "react-dom";
 import Slider, { createSliderWithTooltip } from "rc-slider";
 
+import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+
 const style = { width: 600, margin: 50 };
 
 function log(value) {
   console.log(value); //eslint-disable-line
-}
-
-function percentFormatter(v) {
-  return `${v} %`;
-}
-
-const SliderWithTooltip = createSliderWithTooltip(Slider);
-
-class CustomizedSlider extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 50
-    };
-  }
-  onSliderChange = value => {
-    log(value);
-    this.setState({
-      value
-    });
-  };
-  onAfterChange = value => {
-    console.log(value); //eslint-disable-line
-  };
-  render() {
-    return (
-      <Slider
-        value={this.state.value}
-        onChange={this.onSliderChange}
-        onAfterChange={this.onAfterChange}
-      />
-    );
-  }
 }
 
 class DynamicBounds extends React.Component {
@@ -50,11 +19,13 @@ class DynamicBounds extends React.Component {
     super(props);
     this.state = {
       min: 0,
-      max: 100
+      max: 100,
+      present: 10
     };
   }
-  onSliderChange = value => {
-    log(value);
+  onSliderChange = e => {
+    log(e);
+    this.setState({ present: e.target.value });
   };
   onMinChange = e => {
     this.setState({
@@ -68,29 +39,34 @@ class DynamicBounds extends React.Component {
   };
   render() {
     return (
-      <div>
-        <label>Min: </label>
-        <input
-          type="number"
-          value={this.state.min}
-          onChange={this.onMinChange}
-        />
-        <br />
-        <label>Max: </label>
-        <input
-          type="number"
-          value={this.state.max}
-          onChange={this.onMaxChange}
-        />
-        <br />
-        <br />
-        <Slider
-          defaultValue={50}
-          min={this.state.min}
-          max={this.state.max}
-          onChange={this.onSliderChange}
-        />
-      </div>
+      <Form>
+        <FormGroup>
+          <div>
+            <label>Min: </label>
+            <input
+              type="number"
+              value={this.state.min}
+              onChange={this.onMinChange}
+            />
+            <br />
+            <label>Max: </label>
+            <input
+              type="number"
+              value={this.state.max}
+              onChange={this.onMaxChange}
+            />
+            <br />
+            <br />
+            <Slider
+              defaultValue={50}
+              min={this.state.min}
+              max={this.state.max}
+              defaultValue={this.state.present}
+              onChange={this.onSliderChange}
+            />
+          </div>
+        </FormGroup>
+      </Form>
     );
   }
 }
@@ -99,91 +75,6 @@ class SliderSlider extends Component {
   render() {
     return (
       <div>
-        <div style={style}>
-          <p>Basic Slider</p>
-          <Slider onChange={log} />
-        </div>
-        <div style={style}>
-          <p>Basic Slider，`step=20`</p>
-          <Slider step={20} defaultValue={50} onBeforeChange={log} />
-        </div>
-        <div style={style}>
-          <p>Basic Slider，`step=20, dots`</p>
-          <Slider dots step={20} defaultValue={100} onAfterChange={log} />
-        </div>
-        <div style={style}>
-          <p>
-            Basic Slider，`step=20, dots, dotStyle=
-            {"{borderColor: 'orange'}"}, activeDotStyle=
-            {"{borderColor: 'yellow'}"}`
-          </p>
-          <Slider
-            dots
-            step={20}
-            defaultValue={100}
-            onAfterChange={log}
-            dotStyle={{ borderColor: "orange" }}
-            activeDotStyle={{ borderColor: "yellow" }}
-          />
-        </div>
-        <div style={style}>
-          <p>Slider with tooltip, with custom `tipFormatter`</p>
-          <SliderWithTooltip
-            tipFormatter={percentFormatter}
-            tipProps={{ overlayClassName: "foo" }}
-            onChange={log}
-          />
-        </div>
-        <div style={style}>
-          <p>
-            Slider with custom handle and track style.
-            <strong>(old api, will be deprecated)</strong>
-          </p>
-          <Slider
-            defaultValue={30}
-            maximumTrackStyle={{ backgroundColor: "red", height: 10 }}
-            minimumTrackStyle={{ backgroundColor: "blue", height: 10 }}
-            handleStyle={{
-              borderColor: "blue",
-              height: 28,
-              width: 28,
-              marginLeft: -14,
-              marginTop: -9,
-              backgroundColor: "black"
-            }}
-          />
-        </div>
-        <div style={style}>
-          <p>
-            Slider with custom handle and track style.
-            <strong>(The recommended new api)</strong>
-          </p>
-          <Slider
-            defaultValue={30}
-            trackStyle={{ backgroundColor: "blue", height: 10 }}
-            handleStyle={{
-              borderColor: "blue",
-              height: 28,
-              width: 28,
-              marginLeft: -14,
-              marginTop: -9,
-              backgroundColor: "black"
-            }}
-            railStyle={{ backgroundColor: "red", height: 10 }}
-          />
-        </div>
-        <div style={style}>
-          <p>Basic Slider, disabled</p>
-          <Slider onChange={log} disabled />
-        </div>
-        <div style={style}>
-          <p>Controlled Slider</p>
-          <Slider value={50} />
-        </div>
-        <div style={style}>
-          <p>Customized Slider</p>
-          <CustomizedSlider />
-        </div>
         <div style={style}>
           <p>Slider with dynamic `min` `max`</p>
           <DynamicBounds />
