@@ -2,8 +2,6 @@ import React, { Component } from "react";
 
 /* eslint react/no-multi-comp: 0, max-len: 0 */
 import "rc-slider/assets/index.css";
-
-import ReactDOM from "react-dom";
 import Slider, { createSliderWithTooltip } from "rc-slider";
 
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
@@ -17,6 +15,7 @@ function log(value) {
 class DynamicBounds extends React.Component {
   constructor(props) {
     super(props);
+    this.onSliderChange = this.onSliderChange.bind(this);
     this.state = {
       min: 0,
       max: 100,
@@ -25,16 +24,17 @@ class DynamicBounds extends React.Component {
   }
   onSliderChange = e => {
     log(e);
-    this.setState({ present: e.target.value });
+    this.setState({ present: +e || 100 });
   };
   onMinChange = e => {
     this.setState({
       min: +e.target.value || 0
     });
+    console.log(this.state.min);
   };
   onMaxChange = e => {
     this.setState({
-      max: +e.target.value || 100
+      present: +e.target.value || 100
     });
   };
   render() {
@@ -42,27 +42,21 @@ class DynamicBounds extends React.Component {
       <Form>
         <FormGroup>
           <div>
-            <label>Min: </label>
-            <input
+            <label>Quantity: </label>
+            <Input
               type="number"
-              value={this.state.min}
-              onChange={this.onMinChange}
-            />
-            <br />
-            <label>Max: </label>
-            <input
-              type="number"
-              value={this.state.max}
+              value={this.state.present}
               onChange={this.onMaxChange}
             />
             <br />
             <br />
             <Slider
-              defaultValue={50}
               min={this.state.min}
               max={this.state.max}
-              defaultValue={this.state.present}
+              value={this.state.present}
               onChange={this.onSliderChange}
+              step="1"
+              defaultValue="10"
             />
           </div>
         </FormGroup>
